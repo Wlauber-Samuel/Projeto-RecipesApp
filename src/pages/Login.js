@@ -1,10 +1,17 @@
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { LoginContext } from '../context/LoginProvider';
 
 function Login() {
-  const { email, password, handleChange, handleSubmit } = useContext(LoginContext);
+  const { email, password, handleChange } = useContext(LoginContext);
   const REGEX_EMAIL = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
   const MIN_PASSWORD = 7;
+  const history = useHistory();
+
+  const handleSubmit = () => {
+    localStorage.setItem('user', JSON.stringify({ email }));
+    history.push('/meals');
+  };
 
   return (
     <div>
