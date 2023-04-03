@@ -1,7 +1,7 @@
 import React from 'react';
 import Footer from '../components/Footer';
 
-function Meals() {
+function Profile() {
   return (
     <div>
       <h1>App Receitas</h1>
@@ -11,4 +11,4 @@ function Meals() {
   );
 }
 
-export default Meals;
+export default Profile;
