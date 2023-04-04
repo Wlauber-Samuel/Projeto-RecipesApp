@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import LoginProvider from './context/LoginProvider';
+import SearchBarProvider from './context/SearchBarProvider';
 import Login from './pages/Login';
 import Recipes from './pages/Recipes';
 import Profile from './pages/Profile';
@@ -11,8 +12,8 @@ import './App.css';
 
 function App() {
   return (
-    <div className="main-container">
-      <BrowserRouter>
+    <BrowserRouter>
+      <SearchBarProvider>
         <LoginProvider>
           <Switch>
             <Route exact path="/" component={ Login } />
@@ -22,8 +23,8 @@ function App() {
             <Route path="/favorite-recipes" component={ favoriteRecipes } />
           </Switch>
         </LoginProvider>
-      </BrowserRouter>
-    </div>
+      </SearchBarProvider>
+    </BrowserRouter>
   );
 }
 
