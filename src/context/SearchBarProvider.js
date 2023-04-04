@@ -5,11 +5,16 @@ export const SearchBarContext = createContext();
 
 function SearchBarProvider({ children }) {
   const [data, setData] = useState([]);
+  const [radio, setRadio] = useState('');
+
+  const handleChangeRadio = ({ target: { value } }) => {
+    setRadio(value);
+  };
 
   const foo = useMemo(
-    () => ({ data, setData,
+    () => ({ data, setData, radio, setRadio, handleChangeRadio,
     }),
-    [data],
+    [data, radio],
   );
 
   return (

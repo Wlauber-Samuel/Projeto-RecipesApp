@@ -3,18 +3,13 @@ import { useHistory } from 'react-router-dom';
 import { SearchBarContext } from '../context/SearchBarProvider';
 
 function SearchBar() {
-  const { setData } = useContext(SearchBarContext);
+  const { setData, radio, handleChangeRadio } = useContext(SearchBarContext);
   const [search, setSearch] = useState('');
-  const [radio, setRadio] = useState('');
   const history = useHistory();
   const { pathname } = history.location;
 
   const handleChangeButton = ({ target: { name, value } }) => {
     if (name === 'search') setSearch(value);
-  };
-
-  const handleChangeRadio = ({ target: { value } }) => {
-    setRadio(value);
   };
 
   const fetchData = async (url) => {
@@ -24,12 +19,12 @@ function SearchBar() {
   };
 
   let data;
+  const number = 12;
 
   const mealsSwitchCase = async () => {
     const urlMeals = 'https://www.themealdb.com/api/json/v1/1';
     if (radio === 'Ingredient') {
       data = await fetchData(`${urlMeals}/filter.php?i=${search}`);
-      console.log(data.meals);
     }
     if (radio === 'Name') {
       data = await fetchData(`${urlMeals}/search.php?s=${search}`);
@@ -41,9 +36,14 @@ function SearchBar() {
       }
       data = await fetchData(`${urlMeals}/search.php?f=${search}`);
     }
-    if (data.meals.length === 1) {
+    console.log(data);
+    if (data?.meals?.length === 1) {
       history.push(`/meals/${data.meals[0].idMeal}`);
     }
+    if (await !data?.meals) {
+      global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    }
+    data = await data?.meals?.slice(0, number);
   };
 
   const drinksSwitchCase = async () => {
@@ -61,18 +61,22 @@ function SearchBar() {
       }
       data = await fetchData(`${urlDrinks}/search.php?f=${search}`);
     }
-    if (data.drinks.length === 1) {
+    if (await data?.drinks?.length === 1) {
       history.push(`/drinks/${data.drinks[0].idDrink}`);
     }
+    if (await !data?.drinks) {
+      global.alert('Sorry, we haven\'t found any recipes for these filters.');
+    }
+    data = await data?.drinks?.slice(0, number);
   };
 
   const handleClick = async () => {
     switch (pathname) {
     case '/meals':
-      mealsSwitchCase();
+      await mealsSwitchCase();
       break;
     case '/drinks':
-      drinksSwitchCase();
+      await drinksSwitchCase();
       break;
     default:
       break;
@@ -87,7 +91,6 @@ function SearchBar() {
         <input
           data-testid="ingredient-search-radio"
           type="radio"
-          id={ radio }
           name="radio"
           value="Ingredient"
           onChange={ handleChangeRadio }
