@@ -1,16 +1,19 @@
-.footer {
-  background-color: red;
-  bottom: 0;
-  color: black;
-  display: flex;
-  justify-content: space-between;
-  left: 0;
-  position: fixed;
+.header {
+  background-color: whitesmoke;
   text-align: center;
+  top: 0;
   width: 100%;
 }
 
-.footer button {
+.header-buttons {
+  background-color: red;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  width: 100%;
+}
+
+.header-buttons button {
   background: none;
   border: none;
   border-radius: 5px;

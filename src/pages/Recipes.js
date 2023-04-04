@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import RecipeCard from '../components/RecipeCard';
 import fetchApi from '../helpers/fetchApi';
 import useFetchRecipes from '../helpers/useFetchRecipes';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
+import { SearchBarContext } from '../context/SearchBarProvider';
 
 export default function Recipes() {
+  const { data, setData } = useContext(SearchBarContext);
   const [category, setCategory] = useState('');
-  const [catalog, setCatalog] = useState(null);
   const [categories, setCategories] = useState(null);
   const history = useHistory();
   const { pathname } = history.location;
 
-  useFetchRecipes(category, setCatalog);
+  useFetchRecipes(category, setData);
   useEffect(() => {
     const maxCategories = 5;
     switch (pathname) {
@@ -51,7 +53,12 @@ export default function Recipes() {
 
   return (
     <>
-      <div>
+      <Header
+        title={
+          pathname === '/meals' ? 'Meals' : 'Drinks'
+        }
+      />
+      <div className="recipes">
         {categories?.map((option) => (
           <Button
             variant="light"
@@ -69,7 +76,7 @@ export default function Recipes() {
         >
           All
         </Button>
-        {catalog?.map((recipe, index) => (
+        { data?.map((recipe, index) => (
           <RecipeCard
             key={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
             name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }

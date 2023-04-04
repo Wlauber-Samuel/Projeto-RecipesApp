@@ -2,13 +2,13 @@ import React from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 
-function Profile() {
+function doneRecipes() {
   return (
     <div>
-      <Header title="Profile" />
+      <Header title="Done Recipes" />
       <Footer />
     </div>
   );
 }
 
-export default Profile;
+export default doneRecipes;
