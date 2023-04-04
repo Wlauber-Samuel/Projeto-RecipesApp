@@ -46,6 +46,7 @@ export default function Recipes() {
     }
   }, [pathname]);
 
+  console.log(data);
   const handleCategory = ({ target }) => {
     if (category === target.textContent || target.textContent === 'All') setCategory('');
     else setCategory(target.textContent);

@@ -8,6 +8,7 @@ import Recipes from './pages/Recipes';
 import Profile from './pages/Profile';
 import doneRecipes from './pages/DoneRecipes';
 import favoriteRecipes from './pages/FavoriteRecipes';
+import RecipeDetails from './pages/RecipeDetails';
 import './App.css';
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
             <Route path="/profile" component={ Profile } />
             <Route path="/done-recipes" component={ doneRecipes } />
             <Route path="/favorite-recipes" component={ favoriteRecipes } />
+            <Route path="/meals/:id" component={ RecipeDetails } />
+            <Route path="/drinks/:id" component={ RecipeDetails } />
           </Switch>
         </LoginProvider>
       </SearchBarProvider>
