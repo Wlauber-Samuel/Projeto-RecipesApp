@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import RecipeCard from '../components/RecipeCard';
 import fetchApi from '../helpers/fetchApi';
 import useFetchRecipes from '../helpers/useFetchRecipes';
+import Footer from '../components/Footer';
 
 export default function Recipes() {
   const [category, setCategory] = useState('');
@@ -49,35 +50,38 @@ export default function Recipes() {
   };
 
   return (
-    <div>
-      {categories?.map((option) => (
+    <>
+      <div>
+        {categories?.map((option) => (
+          <Button
+            variant="light"
+            key={ option }
+            data-testid={ `${option}-category-filter` }
+            onClick={ handleCategory }
+          >
+            {option}
+          </Button>
+        ))}
         <Button
           variant="light"
-          key={ option }
-          data-testid={ `${option}-category-filter` }
+          data-testid="All-category-filter"
           onClick={ handleCategory }
         >
-          {option}
+          All
         </Button>
-      ))}
-      <Button
-        variant="light"
-        data-testid="All-category-filter"
-        onClick={ handleCategory }
-      >
-        All
-      </Button>
-      {catalog?.map((recipe, index) => (
-        <RecipeCard
-          key={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
-          name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
-          index={ index }
-          thumb={
-            recipe[pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb']
-          }
-          url={ `${pathname}/${recipe[pathname === '/meals' ? 'idMeal' : 'idDrink']}` }
-        />
-      ))}
-    </div>
+        {catalog?.map((recipe, index) => (
+          <RecipeCard
+            key={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
+            name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
+            index={ index }
+            thumb={
+              recipe[pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb']
+            }
+            url={ `${pathname}/${recipe[pathname === '/meals' ? 'idMeal' : 'idDrink']}` }
+          />
+        ))}
+      </div>
+      <Footer />
+    </>
   );
 }
