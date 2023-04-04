@@ -5,6 +5,7 @@ import RecipeCard from '../components/RecipeCard';
 import fetchApi from '../helpers/fetchApi';
 import useFetchRecipes from '../helpers/useFetchRecipes';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 export default function Recipes() {
   const [category, setCategory] = useState('');
@@ -51,7 +52,12 @@ export default function Recipes() {
 
   return (
     <>
-      <div>
+      <Header
+        title={
+          pathname === '/meals' ? 'Meals' : 'Drinks'
+        }
+      />
+      <div className="recipes">
         {categories?.map((option) => (
           <Button
             variant="light"

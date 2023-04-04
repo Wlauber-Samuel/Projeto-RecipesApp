@@ -1,5 +1,5 @@
 .footer {
-  background-color: whitesmoke;
+  background-color: red;
   bottom: 0;
   color: black;
   display: flex;
@@ -8,4 +8,12 @@
   position: fixed;
   text-align: center;
   width: 100%;
+}
+
+.footer button {
+  background: none;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
 }
