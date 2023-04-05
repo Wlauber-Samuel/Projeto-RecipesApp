@@ -13,6 +13,8 @@ function RecipeDetails() {
   const [fetchId, setFetchId] = useState([{}]);
   const [share, setShare] = useState(false);
   const [favorite, setFavorite] = useState(false);
+  const [done, setDone] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
   const history = useHistory();
   const { pathname } = history.location;
 
@@ -41,6 +43,14 @@ function RecipeDetails() {
     const areFavorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
     const isFavorite = areFavorite?.some((item) => item.id === id);
     setFavorite(isFavorite);
+    const areDone = JSON.parse(localStorage.getItem('doneRecipes'));
+    const isDone = areDone?.some((item) => item.id === id);
+    setDone(isDone);
+    const areInProgress = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const isInProgress = areInProgress && Object.keys(areInProgress?.[
+      pathname === `/meals/${id}` ? 'meals' : 'drinks'
+    ])?.includes(id);
+    setInProgress(isInProgress);
   }, [id, pathname]);
 
   const handleShare = () => {
@@ -64,13 +74,23 @@ function RecipeDetails() {
       if (localStorage.getItem('favoriteRecipes') === null) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
       } else {
-        const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        const favoriteRecipes = JSON.parse(
+          localStorage.getItem('favoriteRecipes'),
+        );
         if (favoriteRecipes?.some((item) => item.id === id)) {
-          const newFavoriteRecipes = favoriteRecipes.filter((item) => item.id !== id);
-          localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+          const newFavoriteRecipes = favoriteRecipes.filter(
+            (item) => item.id !== id,
+          );
+          localStorage.setItem(
+            'favoriteRecipes',
+            JSON.stringify(newFavoriteRecipes),
+          );
         } else {
           favoriteRecipes.push(array);
-          localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+          localStorage.setItem(
+            'favoriteRecipes',
+            JSON.stringify(favoriteRecipes),
+          );
         }
       }
     }
@@ -91,13 +111,23 @@ function RecipeDetails() {
       if (localStorage.getItem('favoriteRecipes') === null) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
       } else {
-        const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        const favoriteRecipes = JSON.parse(
+          localStorage.getItem('favoriteRecipes'),
+        );
         if (favoriteRecipes?.some((item) => item.id === id)) {
-          const newFavoriteRecipes = favoriteRecipes.filter((item) => item.id !== id);
-          localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+          const newFavoriteRecipes = favoriteRecipes.filter(
+            (item) => item.id !== id,
+          );
+          localStorage.setItem(
+            'favoriteRecipes',
+            JSON.stringify(newFavoriteRecipes),
+          );
         } else {
           favoriteRecipes.push(array);
-          localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+          localStorage.setItem(
+            'favoriteRecipes',
+            JSON.stringify(favoriteRecipes),
+          );
         }
       }
     }
@@ -184,16 +214,18 @@ function RecipeDetails() {
         ))}
       <h2>Recommendation</h2>
       <Carousel />
-      <button
-        type="button"
-        data-testid="start-recipe-btn"
-        className="start-recipe"
-        onClick={ () => (pathname === `/meals/${id}`
-          ? history.push(`/meals/${id}/in-progress`)
-          : history.push(`/drinks/${id}/in-progress`)) }
-      >
-        Start Recipe
-      </button>
+      {!done && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="start-recipe"
+          onClick={ () => (pathname === `/meals/${id}`
+            ? history.push(`/meals/${id}/in-progress`)
+            : history.push(`/drinks/${id}/in-progress`)) }
+        >
+          {inProgress ? 'Continue Recipe' : 'Start Recipe'}
+        </button>
+      )}
     </div>
   );
 }
