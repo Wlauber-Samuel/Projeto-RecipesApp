@@ -1,0 +1,28 @@
+.recipe-details {
+  height: 100vh;
+  margin-bottom: 60px;
+}
+
+.mySwiper {
+  height: 350px;
+  margin-bottom: 50px;
+  padding: 10px;
+  z-index: -10;
+}
+
+.container-carousel {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+}
+
+.start-recipe {
+  bottom: 0;
+  position: fixed;
+}
+
+.product-details {
+  margin-top: 50px;
+}
