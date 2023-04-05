@@ -8,7 +8,7 @@ export default function useFetchRecipes(category, setCatalog) {
     location: { pathname },
   } = useHistory();
   const sliceRecipes = useCallback(
-    (recipes) => recipes.slice(0, maxRecipes),
+    (recipes) => recipes?.slice(0, maxRecipes),
     [],
   );
   useEffect(() => {
@@ -30,5 +30,5 @@ export default function useFetchRecipes(category, setCatalog) {
     default:
       break;
     }
-  }, [category]);
+  }, [category, pathname]);
 }

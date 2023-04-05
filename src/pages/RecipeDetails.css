@@ -3,13 +3,6 @@
   margin-bottom: 60px;
 }
 
-.mySwiper {
-  height: 350px;
-  margin-bottom: 50px;
-  padding: 10px;
-  z-index: -10;
-}
-
 .container-carousel {
   align-items: center;
   display: flex;

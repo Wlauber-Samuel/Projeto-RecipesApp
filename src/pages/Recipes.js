@@ -17,6 +17,7 @@ export default function Recipes() {
 
   useFetchRecipes(category, setData);
   useEffect(() => {
+    if (category) setCategory('');
     const maxCategories = 5;
     switch (pathname) {
     case '/meals': {
@@ -79,10 +80,10 @@ export default function Recipes() {
         { data?.map((recipe, index) => (
           <RecipeCard
             key={ index }
-            name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
+            name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] || '' }
             index={ index }
             thumb={
-              recipe[pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb']
+              recipe[pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb'] || ''
             }
             url={ `${pathname}/${recipe[pathname === '/meals' ? 'idMeal' : 'idDrink']}` }
           />

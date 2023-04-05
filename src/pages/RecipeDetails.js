@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {
-  useParams,
-  useHistory,
-} from 'react-router-dom/cjs/react-router-dom.min';
-import { Pagination } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import clipboardCopy from 'clipboard-copy';
 import Header from '../components/Header';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
+import Carousel from '../components/Carousel';
 import './RecipeDetails.css';
-
-import 'swiper/swiper-bundle.min.css';
-import 'swiper/swiper.min.css';
 
 function RecipeDetails() {
   const { id } = useParams();
   const [fetchId, setFetchId] = useState([{}]);
-  const [carousel, setCarousel] = useState([]);
   const [share, setShare] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const history = useHistory();
@@ -28,27 +20,17 @@ function RecipeDetails() {
     const fetchIdAPI = async () => {
       const urlMeals = 'https://www.themealdb.com/api/json/v1/1/';
       const urlDrinks = 'https://www.thecocktaildb.com/api/json/v1/1/';
-      const maxNumber = 6;
       switch (pathname) {
       case `/meals/${id}`: {
         const response = await fetch(`${urlMeals}lookup.php?i=${id}`);
         const data = await response.json();
         setFetchId(data.meals);
-        console.log(data.meals);
-        const newResponse = await fetch(`${urlDrinks}search.php?s=`);
-        const newData = await newResponse.json();
-        console.log(newData);
-        setCarousel(newData.drinks.slice(0, maxNumber));
         break;
       }
       case `/drinks/${id}`: {
         const response = await fetch(`${urlDrinks}lookup.php?i=${id}`);
         const data = await response.json();
         setFetchId(data.drinks);
-        const newResponse = await fetch(`${urlMeals}search.php?s=`);
-        const newData = await newResponse.json();
-        console.log(newData);
-        setCarousel(newData.meals.slice(0, maxNumber));
         break;
       }
       default:
@@ -56,6 +38,9 @@ function RecipeDetails() {
       }
     };
     fetchIdAPI();
+    const areFavorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    const isFavorite = areFavorite?.some((item) => item.id === id);
+    setFavorite(isFavorite);
   }, [id, pathname]);
 
   const handleShare = () => {
@@ -78,10 +63,16 @@ function RecipeDetails() {
     if (pathname === `/drinks/${id}`) {
       if (localStorage.getItem('favoriteRecipes') === null) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
+      } else {
+        const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        if (favoriteRecipes?.some((item) => item.id === id)) {
+          const newFavoriteRecipes = favoriteRecipes.filter((item) => item.id !== id);
+          localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+        } else {
+          favoriteRecipes.push(array);
+          localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+        }
       }
-      const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      favoriteRecipes.push(array);
-      localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
     }
   };
 
@@ -99,11 +90,16 @@ function RecipeDetails() {
     if (pathname === `/meals/${id}`) {
       if (localStorage.getItem('favoriteRecipes') === null) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
+      } else {
+        const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
+        if (favoriteRecipes?.some((item) => item.id === id)) {
+          const newFavoriteRecipes = favoriteRecipes.filter((item) => item.id !== id);
+          localStorage.setItem('favoriteRecipes', JSON.stringify(newFavoriteRecipes));
+        } else {
+          favoriteRecipes.push(array);
+          localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
+        }
       }
-      const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      console.log(favoriteRecipes);
-      favoriteRecipes.push(array);
-      localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
     }
   };
 
@@ -129,10 +125,11 @@ function RecipeDetails() {
         <img src={ shareIcon } alt="compartilhar" />
       </button>
       {share ? <span>Link copied!</span> : ''}
-      <button data-testid="favorite-btn" onClick={ handleClickFavorite }>
+      <button onClick={ handleClickFavorite }>
         <img
           src={ !favorite ? whiteHeartIcon : blackHeartIcon }
           alt="compartilhar"
+          data-testid="favorite-btn"
         />
       </button>
       {pathname === `/meals/${id}`
@@ -186,41 +183,7 @@ function RecipeDetails() {
           </div>
         ))}
       <h2>Recommendation</h2>
-      <Swiper
-        slidesPerView={ 2 }
-        spaceBetween={ 30 }
-        pagination={ {
-          clickable: true,
-        } }
-        modules={ [Pagination] }
-        className="mySwiper"
-      >
-        {pathname === `/meals/${id}`
-          ? carousel?.map((drink, index) => (
-            <SwiperSlide
-              key={ index }
-              data-testid={ `${index}-recommendation-card` }
-              className="container-carousel"
-            >
-              <img src={ drink.strDrinkThumb } alt="drink" width={ 160 } />
-              <h3 data-testid={ `${index}-recommendation-title` }>
-                {drink.strDrink}
-              </h3>
-            </SwiperSlide>
-          ))
-          : carousel?.map((food, index) => (
-            <SwiperSlide
-              key={ index }
-              data-testid={ `${index}-recommendation-card` }
-              className="container-carousel"
-            >
-              <img src={ food.strMealThumb } alt="food" width={ 160 } />
-              <h3 data-testid={ `${index}-recommendation-title` }>
-                {food.strMeal}
-              </h3>
-            </SwiperSlide>
-          ))}
-      </Swiper>
+      <Carousel />
       <button
         type="button"
         data-testid="start-recipe-btn"
