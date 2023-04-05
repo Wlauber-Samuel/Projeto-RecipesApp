@@ -58,9 +58,12 @@ function RecipeDetails() {
   return (
     <div className="recipe-details">
       <Header title="Recipe Details" />
+      <button type="button" data-testid="start-recipe-btn" className="start-recipe">
+        Start Recipe
+      </button>
       {pathname === `/meals/${id}`
         ? fetchId?.map((food, index) => (
-          <div key={ index }>
+          <div key={ index } className="product-details">
             <img
               data-testid="recipe-photo"
               src={ food.strMealThumb }
@@ -84,7 +87,7 @@ function RecipeDetails() {
           </div>
         ))
         : fetchId?.map((drink, index) => (
-          <div key={ index }>
+          <div key={ index } className="product-details">
             <img
               data-testid="recipe-photo"
               src={ drink.strDrinkThumb }
@@ -105,9 +108,6 @@ function RecipeDetails() {
             <p data-testid="instructions">{drink.strInstructions}</p>
           </div>
         ))}
-      <button type="button" data-testid="start-recipe-btn">
-        Start Recipe
-      </button>
       <h2>Recommendation</h2>
       <Swiper
         slidesPerView={ 2 }
