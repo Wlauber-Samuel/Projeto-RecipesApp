@@ -66,7 +66,7 @@ function RecipeDetails() {
 
   const favoriteDrinks = () => {
     const { idDrink, strCategory, strAlcoholic, strDrink, strDrinkThumb } = fetchId[0];
-    const favorites = {
+    const array = {
       id: idDrink,
       type: 'drink',
       nationality: '',
@@ -77,17 +77,17 @@ function RecipeDetails() {
     };
     if (pathname === `/drinks/${id}`) {
       if (localStorage.getItem('favoriteRecipes') === null) {
-        localStorage.setItem('favoriteRecipes', JSON.stringify([favorites]));
+        localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
       }
       const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
-      favoriteRecipes.push(favorites);
+      favoriteRecipes.push(array);
       localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
     }
   };
 
   const favoriteMeals = () => {
     const { idMeal, strArea, strCategory, strMeal, strMealThumb } = fetchId[0];
-    const favorites = {
+    const array = {
       id: idMeal,
       type: 'meal',
       nationality: strArea,
@@ -98,11 +98,11 @@ function RecipeDetails() {
     };
     if (pathname === `/meals/${id}`) {
       if (localStorage.getItem('favoriteRecipes') === null) {
-        localStorage.setItem('favoriteRecipes', JSON.stringify([favorites]));
+        localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
       }
       const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
       console.log(favoriteRecipes);
-      favoriteRecipes.push(favorites);
+      favoriteRecipes.push(array);
       localStorage.setItem('favoriteRecipes', JSON.stringify(favoriteRecipes));
     }
   };
