@@ -46,7 +46,6 @@ export default function Recipes() {
     }
   }, [pathname]);
 
-  console.log(data);
   const handleCategory = ({ target }) => {
     if (category === target.textContent || target.textContent === 'All') setCategory('');
     else setCategory(target.textContent);
@@ -79,7 +78,7 @@ export default function Recipes() {
         </Button>
         { data?.map((recipe, index) => (
           <RecipeCard
-            key={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
+            key={ index }
             name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
             index={ index }
             thumb={

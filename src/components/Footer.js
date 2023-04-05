@@ -6,7 +6,6 @@ import './Footer.css';
 
 function Footer() {
   const history = useHistory();
-
   return (
     <div data-testid="footer" className="footer">
       <button
