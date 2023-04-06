@@ -3,6 +3,11 @@
   margin-bottom: 60px;
 }
 
+.product-details {
+  margin-top: 50px;
+}
+
+
 .container-carousel {
   align-items: center;
   display: flex;
@@ -18,6 +23,3 @@
   z-index: 999;
 }
 
-.product-details {
-  margin-top: 50px;
-}
