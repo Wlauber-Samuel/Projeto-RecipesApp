@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
-import createMemoryHistory from 'history/createMemoryHistory';
 import App from '../App';
 
 describe('Testes para o componente Footer', () => {
