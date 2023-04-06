@@ -82,6 +82,8 @@ export default function Recipes() {
             key={ index }
             name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] || '' }
             index={ index }
+            testID={ `${index}-card-img` }
+            testID2={ `${index}-card-name` }
             thumb={
               recipe[pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb'] || ''
             }

@@ -3,7 +3,7 @@ import Details from '../components/Details';
 
 function RecipeDetails() {
   return (
-    <div className="recipe-details">
+    <div>
       <Details />
     </div>
   );
