@@ -44,7 +44,7 @@ function Details() {
   return (
     <div className="recipe-details">
       <Header title="Recipe Details" />
-      <Favorite />
+      <Favorite testId1="favorite-btn" testId2="share-btn" />
       {pathname === `/meals/${id}`
         ? fetchId?.map((food, index) => (
           <div key={ index } className="product-details">
