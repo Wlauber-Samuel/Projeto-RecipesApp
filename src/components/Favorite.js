@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
 import clipboardCopy from 'clipboard-copy';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import blackHeartIcon from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
+import whiteHeartIcon from '../images/whiteHeartIcon.svg';
 import './Favorite.css';
 
-function Favorite() {
-  const { id } = useParams();
+function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
   const history = useHistory();
   const { pathname } = history.location;
   const [done, setDone] = useState(false);
@@ -15,6 +15,8 @@ function Favorite() {
   const [inProgress, setInProgress] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [share, setShare] = useState(false);
+  const id = recipeId || history.location.pathname.split('/')[2];
+  const pathnameFavorite = '/favorite-recipes';
 
   useEffect(() => {
     const fetchIdAPI = async () => {
@@ -40,7 +42,9 @@ function Favorite() {
     fetchIdAPI();
     const areFavorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
     const isFavorite = areFavorite?.some((item) => item.id === id);
+    console.log(id);
     setFavorite(isFavorite);
+    console.log(isFavorite);
     const areDone = JSON.parse(localStorage.getItem('doneRecipes'));
     const isDone = areDone?.some((item) => item.id === id);
     setDone(isDone);
@@ -62,7 +66,7 @@ function Favorite() {
       name: strDrink,
       image: strDrinkThumb,
     };
-    if (pathname === `/drinks/${id}`) {
+    if (pathname === `/drinks/${id}` || recipeType === 'drink') {
       if (localStorage.getItem('favoriteRecipes') === null) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
       } else {
@@ -99,7 +103,7 @@ function Favorite() {
       name: strMeal,
       image: strMealThumb,
     };
-    if (pathname === `/meals/${id}`) {
+    if (pathname === `/meals/${id}` || recipeType === 'meal') {
       if (localStorage.getItem('favoriteRecipes') === null) {
         localStorage.setItem('favoriteRecipes', JSON.stringify([array]));
       } else {
@@ -126,28 +130,48 @@ function Favorite() {
   };
 
   const handleClickFavorite = () => {
-    if (pathname === `/drinks/${id}`) favoriteDrinks();
-    if (pathname === `/meals/${id}`) favoriteMeals();
+    if (pathname === `/drinks/${id}` || recipeType === 'drink') favoriteDrinks();
+    if (pathname === `/meals/${id}` || recipeType === 'meal') favoriteMeals();
     setFavorite((prevState) => !prevState);
+    if (recipeState) {
+      recipeState(JSON.parse(localStorage.getItem('favoriteRecipes')));
+    }
   };
 
   const handleShare = () => {
-    const url = window.location.href;
-    if (!share) clipboardCopy(url);
+    const url = window.location.origin;
+    console.log(window.location);
+    if (!share) {
+      if (pathname === `/drinks/${id}` || pathname === `/meals/${id}`) {
+        clipboardCopy(window.location.href);
+      } else {
+        clipboardCopy(`${url}/${recipeType}s/${id}`);
+      }
+    }
     setShare((prevState) => !prevState);
   };
 
   return (
     <div>
-      <button onClick={ handleClickFavorite }>
+      <button
+        onClick={ handleClickFavorite }
+      >
         <img
           src={ !favorite ? whiteHeartIcon : blackHeartIcon }
           alt="compartilhar"
-          data-testid="favorite-btn"
+          data-testid={ testId1 }
         />
       </button>
-      <button type="button" data-testid="share-btn" onClick={ handleShare }>
-        <img src={ shareIcon } alt="share" />
+      <button
+        type="button"
+        onClick={ handleShare }
+        data-testid={ pathname !== pathnameFavorite ? testId2 : '' }
+      >
+        <img
+          src={ shareIcon }
+          alt="share"
+          data-testid={ pathname === pathnameFavorite ? testId2 : '' }
+        />
         {share ? <span>Link copied!</span> : ''}
       </button>
       {!done && (
@@ -165,5 +189,13 @@ function Favorite() {
     </div>
   );
 }
+
+Favorite.propTypes = {
+  testId1: PropTypes.string.isRequired,
+  testId2: PropTypes.string.isRequired,
+  recipeId: PropTypes.string.isRequired,
+  recipeType: PropTypes.string.isRequired,
+  recipeState: PropTypes.func.isRequired,
+};
 
 export default Favorite;
