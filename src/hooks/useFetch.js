@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 function useFetch(initialValueData = null) {
   const [isLoading, setIsLoading] = useState(true);
-  const [errors, setErrors] = useState({ erro: null });
+  const [errors, setErrors] = useState(null);
   const [data, setData] = useState(initialValueData);
 
   const fetchData = useCallback(async (url) => {
