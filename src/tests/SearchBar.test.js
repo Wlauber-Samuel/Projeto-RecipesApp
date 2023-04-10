@@ -145,6 +145,21 @@ describe('', () => {
       expect(global.alert).toHaveBeenCalled();
     });
   });
+
+  it('', async () => {
+    jest.spyOn(global, 'fetch');
+    jest.spyOn(global, 'alert').mockImplementation((x) => x);
+    const searchToggle = screen.getByTestId(searchToggleTestId);
+    userEvent.click(searchToggle);
+    const firstLetterRadio = screen.getByTestId(firstLetterTestId);
+    const searchInput = screen.getByTestId(searchInputTestId);
+    const searchButton = screen.getByTestId(searchButtonTestId);
+
+    userEvent.click(firstLetterRadio);
+    userEvent.type(searchInput, 'xablau');
+    userEvent.click(searchButton);
+    expect(global.alert).toHaveBeenCalled();
+  });
 });
 
 describe('', () => {
@@ -282,5 +297,20 @@ describe('', () => {
       expect(global.fetch).toHaveBeenCalledWith('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=xablau');
       expect(global.alert).toHaveBeenCalled();
     });
+  });
+
+  it('', async () => {
+    jest.spyOn(global, 'fetch');
+    jest.spyOn(global, 'alert').mockImplementation((x) => x);
+    const searchToggle = screen.getByTestId(searchToggleTestId);
+    userEvent.click(searchToggle);
+    const firstLetterRadio = screen.getByTestId(firstLetterTestId);
+    const searchInput = screen.getByTestId(searchInputTestId);
+    const searchButton = screen.getByTestId(searchButtonTestId);
+
+    userEvent.click(firstLetterRadio);
+    userEvent.type(searchInput, 'xablau');
+    userEvent.click(searchButton);
+    expect(global.alert).toHaveBeenCalled();
   });
 });

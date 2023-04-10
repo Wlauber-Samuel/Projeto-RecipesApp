@@ -2,7 +2,14 @@ import { number, string } from 'prop-types';
 import { Link } from 'react-router-dom';
 import './RecipeCard.css';
 
-export default function RecipeCard({ name, thumb, index, url, testID, testID2 }) {
+export default function RecipeCard({
+  name = '',
+  thumb = '',
+  index,
+  url,
+  testID,
+  testID2,
+}) {
   return (
     <Link to={ url }>
       <section data-testid={ `${index}-recipe-card` } className="recipe-card">
@@ -19,8 +26,8 @@ export default function RecipeCard({ name, thumb, index, url, testID, testID2 })
 }
 
 RecipeCard.propTypes = {
-  name: string.isRequired,
-  thumb: string.isRequired,
+  name: string,
+  thumb: string,
   index: number.isRequired,
   url: string.isRequired,
   testID: string.isRequired,
