@@ -15,15 +15,15 @@ function RecipeInProgress() {
   const { isLoading, fetchData, data, errors } = useFetch([]);
   const { id } = useParams();
   const { pathname } = useLocation();
-  const [favorite, setFavorite] = useState(false);
-  const [markedList, setMarkedList] = useState({});
   const [parsedData, setParsedData] = useState({
-    name: '',
+    recipeName: '',
     image: '',
     type: '',
     instructions: '',
     ingredients: [''],
   });
+  const [favorite, setFavorite] = useState(false);
+  const [ingredientList, setIngredientList] = useState({});
 
   // Functions
   const handleData = useCallback(() => {
@@ -37,7 +37,7 @@ function RecipeInProgress() {
     ));
 
     setParsedData({
-      name: recipeData[0].strMeal || recipeData[0].strDrink,
+      recipeName: recipeData[0].strMeal || recipeData[0].strDrink,
       image: recipeData[0][recipeKeys.find((element) => element.includes('Thumb'))],
       type: recipeData[0].strAlcoholic || recipeData[0].strCategory,
       instructions: recipeData[0].strInstructions,
@@ -56,10 +56,16 @@ function RecipeInProgress() {
   const handleMarking = ({ target: { checked, parentNode } }) => {
     if (checked) {
       parentNode.className = 'marked';
-      console.log(parentNode.textContent);
+      setIngredientList((prevState) => ({
+        ...prevState,
+        [parentNode.textContent]: true,
+      }));
     } else {
-      console.log(parentNode.textContent);
       parentNode.className = 'unmarked';
+      setIngredientList((prevState) => ({
+        ...prevState,
+        [parentNode.textContent]: false,
+      }));
     }
   };
 
@@ -80,9 +86,21 @@ function RecipeInProgress() {
     }
   }, [isLoading, handleData, errors]);
 
+  useEffect(() => {
+    const parsedIngredients = {};
+
+    parsedData.ingredients.forEach((ingredient) => {
+      Object.assign(parsedIngredients, { [ingredient]: false });
+    });
+
+    setIngredientList(parsedIngredients);
+  }, [parsedData.ingredients]);
+
   if (errors) {
     return <Erro message={ errors.message } />;
   }
+
+  console.log(Object.keys(ingredientList));
 
   return (
     isLoading ? <Loading />
@@ -103,7 +121,7 @@ function RecipeInProgress() {
           </div>
 
           <h6 data-testid="recipe-category">{ parsedData.type }</h6>
-          <h1 data-testid="recipe-title">{ parsedData.name }</h1>
+          <h1 data-testid="recipe-title">{ parsedData.recipeName }</h1>
 
           <img
             src={ parsedData.image }
@@ -119,10 +137,11 @@ function RecipeInProgress() {
               {
                 parsedData.ingredients.map((item, index) => (
                   <li key={ index }>
-                    <label data-testid={ `${index}-ingredient-step` }>
+                    <label data-testid={ `${index}-ingredient-step` } name={ item }>
                       <input
                         type="checkbox"
                         onChange={ handleMarking }
+                        checked={ ingredientList[item] || false }
                       />
                       { item }
                     </label>
