@@ -19,8 +19,7 @@ export default function Recipes() {
   useEffect(() => {
     if (category) setCategory('');
     const maxCategories = 5;
-    switch (pathname) {
-    case '/meals': {
+    if (pathname === '/meals') {
       fetchApi(
         'https://www.themealdb.com/api/json/v1/1/list.php?c=list',
         'meals',
@@ -29,9 +28,8 @@ export default function Recipes() {
           .slice(0, maxCategories)
           .map(({ strCategory }) => strCategory))
         .then(setCategories);
-      break;
     }
-    case '/drinks': {
+    if (pathname === '/drinks') {
       fetchApi(
         'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list',
         'drinks',
@@ -40,10 +38,6 @@ export default function Recipes() {
           .slice(0, maxCategories)
           .map(({ strCategory }) => strCategory))
         .then(setCategories);
-      break;
-    }
-    default:
-      break;
     }
   }, [pathname]);
 
@@ -80,12 +74,12 @@ export default function Recipes() {
         { data?.map((recipe, index) => (
           <RecipeCard
             key={ index }
-            name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] || '' }
+            name={ recipe[pathname === '/meals' ? 'strMeal' : 'strDrink'] }
             index={ index }
             testID={ `${index}-card-img` }
             testID2={ `${index}-card-name` }
             thumb={
-              recipe[pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb'] || ''
+              recipe[pathname === '/meals' ? 'strMealThumb' : 'strDrinkThumb']
             }
             url={ `${pathname}/${recipe[pathname === '/meals' ? 'idMeal' : 'idDrink']}` }
           />
