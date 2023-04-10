@@ -1,28 +1,7 @@
-// import { render, screen } from '@testing-library/react';
-// import userEvent from '@testing-library/user-event';
-// import App from '../App';
-
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import App from '../App';
-// describe('', () => {
-//   it('', async () => {
-//     render(<App />);
-//     const emailInput = screen.getByTestId('email-input');
-//     const passwordInput = screen.getByTestId('password-input');
-//     const submitButton = screen.getByTestId('login-submit-btn');
-//     userEvent.type(emailInput, 'trybe@trybe.com');
-//     userEvent.type(passwordInput, '1234567');
-//     userEvent.click(submitButton);
-
-//     const recipes = await screen.findAllByTestId(/-card$/);
-//     expect(recipes).toHaveLength(12);
-
-//     const categories = await screen.findAllByTestId(/-category-filter$/);
-//     expect(categories).toHaveLength(6);
-//   });
-// });
 
 describe('', () => {
   beforeEach(async () => {
@@ -96,7 +75,9 @@ describe('', () => {
   });
 
   it('', async () => {
-    const ordinaryCategory = await screen.findByTestId(/Ordinary Drink-category-filter/);
+    const ordinaryCategory = await screen.findByTestId(
+      /Ordinary Drink-category-filter/,
+    );
     userEvent.click(ordinaryCategory);
     await waitFor(async () => {
       const newRecipes = await screen.findAllByTestId(/-recipe-card/);

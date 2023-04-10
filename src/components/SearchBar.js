@@ -36,7 +36,6 @@ function SearchBar() {
       }
       data = await fetchData(`${urlMeals}/search.php?f=${search}`);
     }
-    console.log(data);
     if (data?.meals?.length === 1) {
       history.push(`/meals/${data.meals[0].idMeal}`);
     }

@@ -42,9 +42,7 @@ function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
     fetchIdAPI();
     const areFavorite = JSON.parse(localStorage.getItem('favoriteRecipes'));
     const isFavorite = areFavorite?.some((item) => item.id === id);
-    console.log(id);
     setFavorite(isFavorite);
-    console.log(isFavorite);
     const areDone = JSON.parse(localStorage.getItem('doneRecipes'));
     const isDone = areDone?.some((item) => item.id === id);
     setDone(isDone);
