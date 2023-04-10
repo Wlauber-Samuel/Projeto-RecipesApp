@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import useLocalStorage from '../hooks/useLocalStorage';
 import Erro from '../components/Erro';
 import useFetch from '../hooks/useFetch';
 import Loading from '../components/Loading';
@@ -15,6 +16,10 @@ function RecipeInProgress() {
   const { isLoading, fetchData, data, errors } = useFetch([]);
   const { id } = useParams();
   const { pathname } = useLocation();
+  const [storedValue, setStoredValue] = useLocalStorage('inProgressRecipes', {
+    drinks: {},
+    meals: {},
+  });
   const [parsedData, setParsedData] = useState({
     recipeName: '',
     image: '',
@@ -24,6 +29,7 @@ function RecipeInProgress() {
   });
   const [favorite, setFavorite] = useState(false);
   const [ingredientList, setIngredientList] = useState({});
+  const PATHNAME = pathname.includes('drinks') ? 'drinks' : 'meals';
 
   // Functions
   const handleData = useCallback(() => {
@@ -94,13 +100,21 @@ function RecipeInProgress() {
     });
 
     setIngredientList(parsedIngredients);
-  }, [parsedData.ingredients]);
+  }, [parsedData.ingredients, PATHNAME, id]);
+
+  useEffect(() => {
+    setStoredValue((prevState) => ({
+      ...prevState,
+      [PATHNAME]: {
+        ...prevState[PATHNAME],
+        [id]: ingredientList,
+      },
+    }));
+  }, [PATHNAME, id, ingredientList]);
 
   if (errors) {
     return <Erro message={ errors.message } />;
   }
-
-  console.log(Object.keys(ingredientList));
 
   return (
     isLoading ? <Loading />
@@ -137,7 +151,11 @@ function RecipeInProgress() {
               {
                 parsedData.ingredients.map((item, index) => (
                   <li key={ index }>
-                    <label data-testid={ `${index}-ingredient-step` } name={ item }>
+                    <label
+                      data-testid={ `${index}-ingredient-step` }
+                      name={ item }
+                      className={ ingredientList[item] ? 'marked' : 'unmarked' }
+                    >
                       <input
                         type="checkbox"
                         onChange={ handleMarking }
