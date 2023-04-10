@@ -1,5 +1,5 @@
 export default async function fetchApi(url, key) {
-  const response = await (await fetch(url)).json();
-  const data = key ? await response[key] : await response;
-  return data;
+  const response = await fetch(url);
+  const data = await response.json();
+  return key ? data[key] : data;
 }
