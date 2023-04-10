@@ -1,17 +1,15 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import App from '../App';
 
 describe('Testes para o componente Footer', () => {
   test('Teste se o footer contém os 3 ícones e 3 textos', () => {
-    const history = createMemoryHistory();
     render(
-      <Router history={ history }>
+      <MemoryRouter>
         <App />
-      </Router>,
+      </MemoryRouter>,
     );
     userEvent.type(screen.getByTestId('email-input'), 'email@teste.com');
     userEvent.type(screen.getByTestId('password-input'), '1234567');

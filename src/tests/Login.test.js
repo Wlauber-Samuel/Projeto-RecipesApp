@@ -1,11 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import App from '../App';
 
 describe('Testes para a pagina de Login', () => {
   beforeEach(() => {
-    render(<App />);
+    render(<MemoryRouter><App /></MemoryRouter>);
   });
   test('', () => {
     const button = screen.getByTestId('login-submit-btn');
