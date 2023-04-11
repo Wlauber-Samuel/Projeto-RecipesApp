@@ -30,7 +30,7 @@ function RecipeInProgress() {
     instructions: '',
     ingredients: [''],
   });
-  const [favorite, setFavorite] = useState(false);
+  const [favorite, setFavorite] = useState(storedFavorite.some((recipe) => recipe.id === id));
   const [ingredientList, setIngredientList] = useState({});
   const PATHNAME = pathname.includes('drinks') ? 'drinks' : 'meals';
 
@@ -64,7 +64,7 @@ function RecipeInProgress() {
     const parsedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     const doneRecipe = {
       id,
-      type: pathname,
+      type: PATHNAME,
       nationality: data.strArea || '',
       category: data.strCategory,
       alcoholicOrNot: data.strAlcoholic || '',
@@ -78,13 +78,22 @@ function RecipeInProgress() {
   const handleClickFavorite = () => {
     const favoriteRecipe = {
       id,
-      type: pathname,
+      type: PATHNAME === 'drinks' ? 'drink' : 'meal',
       nationality: data.strArea || '',
       category: data.strCategory,
       alcoholicOrNot: data.strAlcoholic || '',
       name: parsedData.name,
       image: parsedData.image,
     };
+    if (storedFavorite === null) {
+      setStoredFavorite([favoriteRecipe]);
+    } else if (storedFavorite.some((recipe) => recipe.id === id)) {
+      const newFavorite = storedFavorite.filter((recipe) => recipe.id !== id);
+      setStoredFavorite(newFavorite);
+    } else {
+      setStoredFavorite([...storedFavorite, favoriteRecipe]);
+    }
+    setFavorite((prevState) => !prevState);
   };
 
   const handleMarking = ({ target: { checked, parentNode } }) => {
