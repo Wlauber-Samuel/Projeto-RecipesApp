@@ -21,8 +21,10 @@ function RecipeInProgress() {
     drinks: {},
     meals: {},
   });
+  const [storedFavorite, setStoredFavorite] = useLocalStorage('favoriteRecipes', []);
+  const [storedDoneRecipes, setStoredDoneRecipes] = useLocalStorage('doneRecipes', []);
   const [parsedData, setParsedData] = useState({
-    recipeName: '',
+    name: '',
     image: '',
     type: '',
     instructions: '',
@@ -33,7 +35,7 @@ function RecipeInProgress() {
   const PATHNAME = pathname.includes('drinks') ? 'drinks' : 'meals';
 
   // Functions
-  const handleData = useCallback(() => {
+  const parseData = useCallback(() => {
     const recipeData = data.drinks || data.meals;
     const recipeKeys = Object.keys(recipeData[0]);
 
@@ -44,7 +46,7 @@ function RecipeInProgress() {
     ));
 
     setParsedData({
-      recipeName: recipeData[0].strMeal || recipeData[0].strDrink,
+      name: recipeData[0].strMeal || recipeData[0].strDrink,
       image: recipeData[0][recipeKeys.find((element) => element.includes('Thumb'))],
       type: recipeData[0].strAlcoholic || recipeData[0].strCategory,
       instructions: recipeData[0].strInstructions,
@@ -53,11 +55,32 @@ function RecipeInProgress() {
   }, [data]);
 
   const handleShare = () => {
-    console.log('share!');
+
   };
 
+  const handleDoneRecipe = () => {
+    const doneRecipe = {
+      id,
+      type: pathname,
+      nationality: data.strArea || '',
+      category: data.strCategory,
+      alcoholicOrNot: data.strAlcoholic || '',
+      name: parsedData.name,
+      image: parsedData.image,
+      doneDate: 
+    }
+  }
+
   const handleClickFavorite = () => {
-    console.log('favorite!!');
+    const favoriteRecipe = {
+      id,
+      type: pathname,
+      nationality: data.strArea || '',
+      category: data.strCategory,
+      alcoholicOrNot: data.strAlcoholic || '',
+      name: parsedData.name,
+      image: parsedData.image,
+    };
   };
 
   const handleMarking = ({ target: { checked, parentNode } }) => {
@@ -89,7 +112,7 @@ function RecipeInProgress() {
 
   useEffect(() => {
     if (!isLoading && !errors) {
-      handleData();
+      parseData();
     }
   }, [isLoading, handleData, errors]);
 
@@ -136,7 +159,7 @@ function RecipeInProgress() {
           </div>
 
           <h6 data-testid="recipe-category">{ parsedData.type }</h6>
-          <h1 data-testid="recipe-title">{ parsedData.recipeName }</h1>
+          <h1 data-testid="recipe-title">{ parsedData.name }</h1>
 
           <img
             src={ parsedData.image }
