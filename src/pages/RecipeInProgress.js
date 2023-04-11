@@ -76,12 +76,13 @@ function RecipeInProgress() {
   };
 
   const handleClickFavorite = () => {
+    console.log(data[PATHNAME][0]);
     const favoriteRecipe = {
       id,
       type: PATHNAME === 'drinks' ? 'drink' : 'meal',
-      nationality: data.strArea || '',
-      category: data.strCategory,
-      alcoholicOrNot: data.strAlcoholic || '',
+      nationality: data[PATHNAME][0].strArea || '',
+      category: data[PATHNAME][0].strCategory,
+      alcoholicOrNot: data[PATHNAME][0].strAlcoholic || '',
       name: parsedData.name,
       image: parsedData.image,
     };
@@ -215,7 +216,7 @@ function RecipeInProgress() {
             type="button"
             data-testid="finish-recipe-btn"
             disabled={ !Object.values(ingredientList).every((item) => item === true) }
-            onClick={ () => history.push('/done-recipes') }
+            onClick={ handleDoneRecipe }
           >
             Finish Recipe
           </button>
