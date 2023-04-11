@@ -51,6 +51,7 @@ function RecipeInProgress() {
       type: recipeData[0].strAlcoholic || recipeData[0].strCategory,
       instructions: recipeData[0].strInstructions,
       ingredients: ingredientKeys.map((ingredient) => recipeData[0][ingredient]),
+      tags: recipeData[0].strTags?.split(',') || [],
     });
   }, [data]);
 
@@ -59,6 +60,8 @@ function RecipeInProgress() {
   };
 
   const handleDoneRecipe = () => {
+    const date = new Date();
+    const parsedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     const doneRecipe = {
       id,
       type: pathname,
@@ -67,9 +70,10 @@ function RecipeInProgress() {
       alcoholicOrNot: data.strAlcoholic || '',
       name: parsedData.name,
       image: parsedData.image,
-      doneDate: 
-    }
-  }
+      doneDate: parsedDate,
+      tags: parsedData.tags,
+    };
+  };
 
   const handleClickFavorite = () => {
     const favoriteRecipe = {
@@ -114,7 +118,7 @@ function RecipeInProgress() {
     if (!isLoading && !errors) {
       parseData();
     }
-  }, [isLoading, handleData, errors]);
+  }, [isLoading, parseData, errors]);
 
   useEffect(() => {
     const parsedIngredients = {};
