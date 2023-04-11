@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 import useLocalStorage from '../hooks/useLocalStorage';
 import Erro from '../components/Erro';
 import useFetch from '../hooks/useFetch';
@@ -15,7 +15,8 @@ const DRINK_URL = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=';
 function RecipeInProgress() {
   const { isLoading, fetchData, data, errors } = useFetch([]);
   const { id } = useParams();
-  const { pathname } = useLocation();
+  const history = useHistory();
+  const { pathname } = history.location;
   const [storedValue, setStoredValue] = useLocalStorage('inProgressRecipes', {
     drinks: {},
     meals: {},
@@ -174,7 +175,14 @@ function RecipeInProgress() {
             <p data-testid="instructions">{ parsedData.instructions }</p>
           </section>
 
-          <button type="button" data-testid="finish-recipe-btn">Finish Recipe</button>
+          <button
+            type="button"
+            data-testid="finish-recipe-btn"
+            disabled={ !Object.values(ingredientList).every((item) => item === true) }
+            onClick={ () => history.push('/done-recipes') }
+          >
+            Finish Recipe
+          </button>
         </div>
       )
   );
