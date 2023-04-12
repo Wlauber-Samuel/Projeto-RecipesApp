@@ -56,6 +56,14 @@ function RecipeInProgress() {
   }, [data]);
 
   const handleShare = () => {
+    console.log('share!');
+  };
+
+  const handleClickFavorite = () => {
+    console.log('favorite!!');
+  };
+
+  const handleShare = () => {
 
   };
 
