@@ -61,18 +61,19 @@ function RecipeInProgress() {
 
   const handleDoneRecipe = () => {
     const date = new Date();
-    const parsedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     const doneRecipe = {
       id,
-      type: PATHNAME,
-      nationality: data.strArea || '',
-      category: data.strCategory,
-      alcoholicOrNot: data.strAlcoholic || '',
+      type: PATHNAME === 'drinks' ? 'drink' : 'meal',
+      nationality: data[PATHNAME][0].strArea || '',
+      category: data[PATHNAME][0].strCategory,
+      alcoholicOrNot: data[PATHNAME][0].strAlcoholic || '',
       name: parsedData.name,
       image: parsedData.image,
-      doneDate: parsedDate,
+      doneDate: date.toISOString(),
       tags: parsedData.tags,
     };
+    setStoredDoneRecipes([...storedDoneRecipes, doneRecipe]);
+    history.push('/done-recipes');
   };
 
   const handleClickFavorite = () => {
