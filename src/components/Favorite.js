@@ -16,7 +16,7 @@ function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
   const [favorite, setFavorite] = useState(false);
   const [share, setShare] = useState(false);
   const id = recipeId || history.location.pathname.split('/')[2];
-  const pathnameFavorite = '/favorite-recipes';
+  const pathnames = ['/favorite-recipes', '/done-recipes'];
 
   useEffect(() => {
     const fetchIdAPI = async () => {
@@ -163,12 +163,12 @@ function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
       <button
         type="button"
         onClick={ handleShare }
-        data-testid={ pathname !== pathnameFavorite ? testId2 : '' }
+        data-testid={ !pathnames.includes(pathname) ? testId2 : '' }
       >
         <img
           src={ shareIcon }
           alt="share"
-          data-testid={ pathname === pathnameFavorite ? testId2 : '' }
+          data-testid={ pathnames.includes(pathname) ? testId2 : '' }
         />
         {share ? <span>Link copied!</span> : ''}
       </button>
