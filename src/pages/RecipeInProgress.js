@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams, useLocation, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
+import clipboardCopy from 'clipboard-copy';
 import useLocalStorage from '../hooks/useLocalStorage';
 import Erro from '../components/Erro';
 import useFetch from '../hooks/useFetch';
@@ -17,7 +18,8 @@ function RecipeInProgress() {
   const { id } = useParams();
   const history = useHistory();
   const { pathname } = history.location;
-  const [storedValue, setStoredValue] = useLocalStorage('inProgressRecipes', {
+  const PATHNAME = pathname.includes('drinks') ? 'drinks' : 'meals';
+  const [storedProgress, setStoredProgress] = useLocalStorage('inProgressRecipes', {
     drinks: {},
     meals: {},
   });
@@ -30,9 +32,13 @@ function RecipeInProgress() {
     instructions: '',
     ingredients: [''],
   });
-  const [favorite, setFavorite] = useState(storedFavorite.some((recipe) => recipe.id === id));
-  const [ingredientList, setIngredientList] = useState({});
-  const PATHNAME = pathname.includes('drinks') ? 'drinks' : 'meals';
+  const [favorite, setFavorite] = useState(
+    storedFavorite.some((recipe) => recipe.id === id),
+  );
+  const [ingredientList, setIngredientList] = useState(
+    storedProgress[PATHNAME][id] || [],
+  );
+  const [share, setShare] = useState(false);
 
   // Functions
   const parseData = useCallback(() => {
@@ -56,8 +62,19 @@ function RecipeInProgress() {
   }, [data]);
 
   const handleShare = () => {
-    console.log('share!');
+    const url = window.location.href.replace(/\/in-progress/, '');
+    clipboardCopy(url);
+    setShare(true);
   };
+
+  useEffect(() => {
+    const time = 1000;
+    const timeout = setTimeout(() => setShare(false), time);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [share]);
 
   const handleDoneRecipe = () => {
     const date = new Date();
@@ -101,16 +118,11 @@ function RecipeInProgress() {
   const handleMarking = ({ target: { checked, parentNode } }) => {
     if (checked) {
       parentNode.className = 'marked';
-      setIngredientList((prevState) => ({
-        ...prevState,
-        [parentNode.textContent]: true,
-      }));
+      setIngredientList((prevState) => ([...prevState, parentNode.textContent]));
     } else {
       parentNode.className = 'unmarked';
-      setIngredientList((prevState) => ({
-        ...prevState,
-        [parentNode.textContent]: false,
-      }));
+      setIngredientList((prevState) => (
+        prevState.filter((ingredient) => parentNode.textContent !== ingredient)));
     }
   };
 
@@ -132,17 +144,7 @@ function RecipeInProgress() {
   }, [isLoading, parseData, errors]);
 
   useEffect(() => {
-    const parsedIngredients = {};
-
-    parsedData.ingredients.forEach((ingredient) => {
-      Object.assign(parsedIngredients, { [ingredient]: false });
-    });
-
-    setIngredientList(parsedIngredients);
-  }, [parsedData.ingredients, PATHNAME, id]);
-
-  useEffect(() => {
-    setStoredValue((prevState) => ({
+    setStoredProgress((prevState) => ({
       ...prevState,
       [PATHNAME]: {
         ...prevState[PATHNAME],
@@ -160,17 +162,19 @@ function RecipeInProgress() {
       : (
         <div>
           <div className="buttons__container">
-            <button data-testid="share-btn" onClick={ handleShare }>
-              <img src={ shareIcon } alt="compartilhar" />
-            </button>
-
             <button onClick={ handleClickFavorite }>
               <img
                 src={ !favorite ? whiteHeartIcon : blackHeartIcon }
-                alt="compartilhar"
+                alt="favoritar"
                 data-testid="favorite-btn"
               />
             </button>
+
+            <button data-testid="share-btn" onClick={ handleShare }>
+              <img src={ shareIcon } alt="compartilhar" />
+              { share ? <span>Link copied!</span> : '' }
+            </button>
+
           </div>
 
           <h6 data-testid="recipe-category">{ parsedData.type }</h6>
@@ -193,12 +197,18 @@ function RecipeInProgress() {
                     <label
                       data-testid={ `${index}-ingredient-step` }
                       name={ item }
-                      className={ ingredientList[item] ? 'marked' : 'unmarked' }
+                      className={
+                        ingredientList.some(
+                          (ingredient) => ingredient === item,
+                        ) ? 'marked' : 'unmarked'
+                      }
                     >
                       <input
                         type="checkbox"
                         onChange={ handleMarking }
-                        checked={ ingredientList[item] || false }
+                        checked={
+                          ingredientList.some((ingredient) => ingredient === item)
+                        }
                       />
                       { item }
                     </label>
@@ -216,7 +226,7 @@ function RecipeInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
-            disabled={ !Object.values(ingredientList).every((item) => item === true) }
+            disabled={ ingredientList.length !== parsedData.ingredients.length }
             onClick={ handleDoneRecipe }
           >
             Finish Recipe
