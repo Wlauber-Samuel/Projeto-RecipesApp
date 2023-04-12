@@ -8,19 +8,17 @@ import Favorite from '../components/Favorite';
 import './FavoriteRecipes.css';
 
 function FavoriteRecipes() {
-  const localFavorites = JSON.parse(localStorage.getItem('favoriteRecipes'));
-
   const [favoriteRecipes, setFavoriteRecipes] = useState(
     JSON.parse(localStorage.getItem('favoriteRecipes')),
   );
 
   const handleClickMeals = () => {
-    const meals = localFavorites.filter((recipe) => recipe.type === 'meal');
+    const meals = favoriteRecipes.filter((recipe) => recipe.type === 'meal');
     setFavoriteRecipes(meals);
   };
 
   const handleClickDrinks = () => {
-    const drinks = localFavorites.filter((recipe) => recipe.type === 'drink');
+    const drinks = favoriteRecipes.filter((recipe) => recipe.type === 'drink');
     setFavoriteRecipes(drinks);
   };
 
@@ -40,6 +38,7 @@ function FavoriteRecipes() {
           <img
             src={ mealIcon }
             alt="compartilhar"
+            data-testid="favorite-btn"
           />
           Food
         </button>
@@ -51,6 +50,7 @@ function FavoriteRecipes() {
           <img
             src={ drinkIcon }
             alt="compartilhar"
+            data-testid="favorite-btn"
           />
           Drinks
         </button>
