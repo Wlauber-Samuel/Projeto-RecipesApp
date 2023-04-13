@@ -152,15 +152,18 @@ function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
   return (
     <div className="">
       <div className="flex p-1 gap-2">
-        <button
-          onClick={ handleClickFavorite }
-        >
-          <img
-            src={ !favorite ? whiteHeartIcon : blackHeartIcon }
-            alt="compartilhar"
-            data-testid={ testId1 }
-          />
-        </button>
+        {pathname === '/done-recipes' ? null
+          : (
+            <button
+              onClick={ handleClickFavorite }
+            >
+              <img
+                src={ !favorite ? whiteHeartIcon : blackHeartIcon }
+                alt="compartilhar"
+                data-testid={ testId1 }
+              />
+            </button>
+          )}
         <button
           type="button"
           onClick={ handleShare }

@@ -75,7 +75,7 @@ function RecipeInProgress() {
       alcoholicOrNot: data[PATHNAME][0].strAlcoholic || '',
       name: parsedData.name,
       image: parsedData.image,
-      doneDate: date.toISOString(),
+      doneDate: date.toDateString(),
       tags: parsedData.tags,
     };
     setStoredDoneRecipes([...storedDoneRecipes, doneRecipe]);
