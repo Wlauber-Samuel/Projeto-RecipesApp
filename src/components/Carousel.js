@@ -45,16 +45,16 @@ function Carousel() {
         clickable: true,
       } }
       modules={ [Pagination] }
-      className="mySwiper"
+      className="mb-[50px] p-3"
     >
       {pathname === `/meals/${id}`
         ? carousel?.map((drink, index) => (
           <SwiperSlide
             key={ index }
             data-testid={ `${index}-recommendation-card` }
-            className="container-carousel"
+            className="flex flex-col justify-center items-center text-center gap-3 rounded-lg border border-gray-300 container-carousel"
           >
-            <img src={ drink.strDrinkThumb } alt="drink" width={ 160 } />
+            <img src={ drink.strDrinkThumb } alt="drink" width={ 160 } className="rounded-t-lg" />
             <h3 data-testid={ `${index}-recommendation-title` }>
               {drink.strDrink}
             </h3>
@@ -64,9 +64,9 @@ function Carousel() {
           <SwiperSlide
             key={ index }
             data-testid={ `${index}-recommendation-card` }
-            className="container-carousel"
+            className="flex flex-col justify-center items-center text-center gap-3 rounded-lg border border-gray-300 container-carousel"
           >
-            <img src={ food.strMealThumb } alt="food" width={ 160 } />
+            <img src={ food.strMealThumb } alt="food" className="rounded-t-lg" />
             <h3 data-testid={ `${index}-recommendation-title` }>
               {food.strMeal}
             </h3>
