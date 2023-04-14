@@ -7,7 +7,7 @@ import './Footer.css';
 function Footer() {
   const history = useHistory();
   return (
-    <div data-testid="footer" className="bg-[#41197F] fixed bottom-0 w-screen flex justify-between h-[60px] px-3">
+    <div data-testid="footer" className="bg-[#41197F] fixed bottom-0 w-screen flex justify-between h-[60px] px-3 z-50">
       <button
         type="button"
         onClick={ () => history.push('/drinks') }

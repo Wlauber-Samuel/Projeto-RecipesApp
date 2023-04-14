@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import blackHeartIcon from '../images/like.png';
 import shareIcon from '../images/Share.png';
 import whiteHeartIcon from '../images/likeborder.png';
-import './Favorite.css';
 
 function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
   const history = useHistory();
@@ -152,15 +151,18 @@ function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
   return (
     <div className="">
       <div className="flex p-1 gap-2">
-        <button
-          onClick={ handleClickFavorite }
-        >
-          <img
-            src={ !favorite ? whiteHeartIcon : blackHeartIcon }
-            alt="compartilhar"
-            data-testid={ testId1 }
-          />
-        </button>
+        {pathname === '/done-recipes' ? null
+          : (
+            <button
+              onClick={ handleClickFavorite }
+            >
+              <img
+                src={ !favorite ? whiteHeartIcon : blackHeartIcon }
+                alt="compartilhar"
+                data-testid={ testId1 }
+              />
+            </button>
+          )}
         <button
           type="button"
           onClick={ handleShare }
