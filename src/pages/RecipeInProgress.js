@@ -5,14 +5,12 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import Erro from '../components/Erro';
 import useFetch from '../hooks/useFetch';
 import Loading from '../components/Loading';
-import shareIcon from '../images/shareIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
-import './RecipeInProgress.css';
+import shareIcon from '../images/Share.png';
+import fullHeart from '../images/like.png';
+import emptyHeart from '../images/likeborder.png';
 
 const MEAL_URL = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=';
 const DRINK_URL = 'https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=';
-
 function RecipeInProgress() {
   const { isLoading, fetchData, data, errors } = useFetch([]);
   const { id } = useParams();
@@ -39,18 +37,14 @@ function RecipeInProgress() {
     storedProgress[PATHNAME][id] || [],
   );
   const [share, setShare] = useState(false);
-
-  // Functions
   const parseData = useCallback(() => {
     const recipeData = data.drinks || data.meals;
     const recipeKeys = Object.keys(recipeData[0]);
-
     const ingredientKeys = Object.keys(recipeData[0]).filter((key) => (
       key.includes('Ingredient')
       && recipeData[0][key] !== null
       && recipeData[0][key] !== ''
     ));
-
     setParsedData({
       name: recipeData[0].strMeal || recipeData[0].strDrink,
       image: recipeData[0][recipeKeys.find((element) => element.includes('Thumb'))],
@@ -60,22 +54,17 @@ function RecipeInProgress() {
       tags: recipeData[0].strTags?.split(',') || [],
     });
   }, [data]);
-
   const handleShare = () => {
-    const url = window.location.href.replace(/\/in-progress/, '');
-    clipboardCopy(url);
+    clipboardCopy(window.location.href.replace(/\/in-progress/, ''));
     setShare(true);
   };
-
   useEffect(() => {
     const time = 1000;
     const timeout = setTimeout(() => setShare(false), time);
-
     return () => {
       clearTimeout(timeout);
     };
   }, [share]);
-
   const handleDoneRecipe = () => {
     const date = new Date();
     const doneRecipe = {
@@ -92,9 +81,7 @@ function RecipeInProgress() {
     setStoredDoneRecipes([...storedDoneRecipes, doneRecipe]);
     history.push('/done-recipes');
   };
-
   const handleClickFavorite = () => {
-    console.log(data[PATHNAME][0]);
     const favoriteRecipe = {
       id,
       type: PATHNAME === 'drinks' ? 'drink' : 'meal',
@@ -114,7 +101,6 @@ function RecipeInProgress() {
     }
     setFavorite((prevState) => !prevState);
   };
-
   const handleMarking = ({ target: { checked, parentNode } }) => {
     if (checked) {
       parentNode.className = 'marked';
@@ -125,115 +111,128 @@ function RecipeInProgress() {
         prevState.filter((ingredient) => parentNode.textContent !== ingredient)));
     }
   };
-
-  // Effects
   useEffect(() => {
     const requestData = async () => {
       if (pathname.includes('drinks')) {
         await fetchData(`${DRINK_URL}${id}`);
       } else await fetchData(`${MEAL_URL}${id}`);
     };
-
     requestData();
   }, [fetchData, id, pathname]);
-
   useEffect(() => {
     if (!isLoading && !errors) {
       parseData();
     }
   }, [isLoading, parseData, errors]);
-
   useEffect(() => {
     setStoredProgress((prevState) => ({
       ...prevState,
-      [PATHNAME]: {
-        ...prevState[PATHNAME],
-        [id]: ingredientList,
-      },
+      [PATHNAME]: { ...prevState[PATHNAME], [id]: ingredientList },
     }));
   }, [PATHNAME, id, ingredientList]);
-
   if (errors) {
     return <Erro message={ errors.message } />;
   }
-
   return (
     isLoading ? <Loading />
       : (
         <div>
-          <div className="buttons__container">
-            <button onClick={ handleClickFavorite }>
-              <img
-                src={ !favorite ? whiteHeartIcon : blackHeartIcon }
-                alt="favoritar"
-                data-testid="favorite-btn"
-              />
-            </button>
-
-            <button data-testid="share-btn" onClick={ handleShare }>
-              <img src={ shareIcon } alt="compartilhar" />
-              { share ? <span>Link copied!</span> : '' }
-            </button>
-
+          <div className="absolute w-full z-10">
+            <div className="flex justify-between p-2">
+              <h5
+                data-testid="recipe-category"
+                className="basis-2/3 text-yellow-500"
+              >
+                { parsedData.type }
+              </h5>
+              <button onClick={ handleClickFavorite }>
+                <img
+                  src={ !favorite ? emptyHeart : fullHeart }
+                  alt="favoritar"
+                  data-testid="favorite-btn"
+                />
+              </button>
+              <button
+                data-testid="share-btn"
+                onClick={ handleShare }
+                className="flex items-center"
+              >
+                <img src={ shareIcon } alt="compartilhar" className="fill-blue-500" />
+                { share ? <span className="text-white">Link copied!</span> : '' }
+              </button>
+            </div>
+            <div className="w-full h-20 flex justify-center">
+              <h1
+                data-testid="recipe-title"
+                className="self-center text-white"
+              >
+                { parsedData.name }
+              </h1>
+            </div>
           </div>
-
-          <h6 data-testid="recipe-category">{ parsedData.type }</h6>
-          <h1 data-testid="recipe-title">{ parsedData.name }</h1>
-
           <img
             src={ parsedData.image }
             alt={ parsedData.name }
             data-testid="recipe-photo"
-            width="250px"
+            className="h-[144px] w-full filter brightness-50 object-cover z-0"
           />
-
-          <section>
+          <section className="p-4">
             <h2>Ingredients</h2>
-
-            <ul className="list-reset">
-              {
-                parsedData.ingredients.map((item, index) => (
-                  <li key={ index }>
-                    <label
-                      data-testid={ `${index}-ingredient-step` }
-                      name={ item }
-                      className={
-                        ingredientList.some(
-                          (ingredient) => ingredient === item,
-                        ) ? 'marked' : 'unmarked'
-                      }
-                    >
-                      <input
-                        type="checkbox"
-                        onChange={ handleMarking }
-                        checked={
-                          ingredientList.some((ingredient) => ingredient === item)
+            <div className="border w-full rounded-md">
+              <ul className="p-2">
+                {
+                  parsedData.ingredients.map((item, index) => (
+                    <li key={ index }>
+                      <label
+                        data-testid={ `${index}-ingredient-step` }
+                        name={ item }
+                        className={
+                          ingredientList.some(
+                            (ingredient) => ingredient === item,
+                          ) ? 'marked' : 'unmarked'
                         }
-                      />
-                      { item }
-                    </label>
-                  </li>
-                ))
-              }
-            </ul>
+                      >
+                        <input
+                          type="checkbox"
+                          onChange={ handleMarking }
+                          checked={
+                            ingredientList.some((ingredient) => ingredient === item)
+                          }
+                          className="m-2
+                          outline outline-2
+                          outline-yellow-500
+                          bg-yellow-800 accent-yellow-300"
+                        />
+                        { item }
+                      </label>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
           </section>
-
-          <section>
+          <section className="p-4">
             <h2>Instructions</h2>
-            <p data-testid="instructions">{ parsedData.instructions }</p>
+            <p
+              data-testid="instructions"
+              className="p-2 border rounded-md"
+            >
+              { parsedData.instructions }
+            </p>
           </section>
-
-          <button
-            type="button"
-            data-testid="finish-recipe-btn"
-            disabled={ ingredientList.length !== parsedData.ingredients.length }
-            onClick={ handleDoneRecipe }
-          >
-            Finish Recipe
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="button"
+              data-testid="finish-recipe-btn"
+              disabled={ ingredientList.length !== parsedData.ingredients.length }
+              onClick={ handleDoneRecipe }
+              className="finishBtn"
+            >
+              Finish Recipe
+            </button>
+          </div>
         </div>
       )
   );
 }
-
 export default RecipeInProgress;

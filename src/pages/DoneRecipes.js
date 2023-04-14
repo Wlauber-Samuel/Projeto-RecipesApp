@@ -5,6 +5,10 @@ import RecipeCard from '../components/RecipeCard';
 import Favorite from '../components/Favorite';
 import drinkIcon from '../images/drinkIcon.svg';
 import mealIcon from '../images/mealIcon.svg';
+import Grupo10 from '../images/balalala.png';
+import foods from '../images/foods.png';
+import drinks from '../images/drinks.png';
+import All3 from '../images/All3.png';
 
 function DoneRecipes() {
   const [doneRecipes, setDoneRecipes] = useState(
@@ -27,7 +31,7 @@ function DoneRecipes() {
 
   return (
     <div>
-      <Header title="Done Recipes" />
+      <Header title="DONE RECIPES" image={ Grupo10 } />
       <div className="container-map">
         <button
           data-testid="filter-by-meal-btn"
@@ -35,11 +39,10 @@ function DoneRecipes() {
           onClick={ handleClickMeals }
         >
           <img
-            src={ mealIcon }
+            src={ foods }
             alt="compartilhar"
             data-testid="favorite-btn"
           />
-          Food
         </button>
         <button
           data-testid="filter-by-drink-btn"
@@ -47,18 +50,21 @@ function DoneRecipes() {
           onClick={ handleClickDrinks }
         >
           <img
-            src={ drinkIcon }
+            src={ drinks }
             alt="compartilhar"
             data-testid="favorite-btn"
           />
-          Drinks
         </button>
         <button
           data-testid="filter-by-all-btn"
           type="button"
           onClick={ handleClickAll }
         >
-          All
+          <img
+            src={ All3 }
+            alt="compartilhar"
+            data-testid="favorite-btn"
+          />
         </button>
         {
           doneRecipes?.map((recipe, index) => (
@@ -71,6 +77,10 @@ function DoneRecipes() {
                 index={ index }
                 thumb={ recipe.image }
                 url={ `/${recipe.type}s/${recipe.id}` }
+                class1="w-[50%] no-underline"
+                class2="flex flex-col justify-center items-center p-2 rounded-lg w-[100%]"
+                class3="w-[42%] rounded-t-lg"
+                class4="flex justify-center items-center text-center text-base text-black w-[42%] py-2 h-20 rounded-b-lg border border-gray-300 font-light"
               />
               <section data-testid={ `${index}-horizontal-top-text` }>
                 <p data-testid={ `${index}-horizontal-top-text` }>
@@ -87,6 +97,7 @@ function DoneRecipes() {
                 recipeId={ recipe.id }
                 recipeType={ recipe.type }
                 recipeState={ setDoneRecipes }
+                className="absolute"
               />
               {recipe.tags.map((tag, index2) => (
                 <p

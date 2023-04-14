@@ -84,51 +84,58 @@ function SearchBar() {
   };
 
   return (
-    <div>
-      <label htmlFor="ingredient-search-radio">
-        Ingredient
-        <input
-          data-testid="ingredient-search-radio"
-          type="radio"
-          name="radio"
-          value="Ingredient"
-          onChange={ handleChangeRadio }
-        />
-      </label>
-      <label htmlFor="name-search-radio">
-        Name
-        <input
-          data-testid="name-search-radio"
-          type="radio"
-          name="radio"
-          value="Name"
-          onChange={ handleChangeRadio }
-        />
-      </label>
-      <label htmlFor="first-letter-search-radio">
-        First Letter
-        <input
-          data-testid="first-letter-search-radio"
-          type="radio"
-          name="radio"
-          value="First Letter"
-          onChange={ handleChangeRadio }
-        />
-      </label>
+    <div className="w-[90%]">
       <input
         data-testid="search-input"
         type="text"
         value={ search }
         name="search"
+        placeholder="...search"
         onChange={ handleChangeButton }
+        className="border-2 border-gray-300 w-full rounded-t-lg py-2"
       />
-      <button
-        data-testid="exec-search-btn"
-        type="button"
-        onClick={ handleClick }
-      >
-        Buscar
-      </button>
+      <div className="flex flex-col w-[100%] py-3 bg-[#41197F] justify-center items-center gap-2 rounded-b-lg text-white">
+        <div className="flex gap-2">
+          <label htmlFor="ingredient-search-radio" className="flex gap-1">
+            <input
+              data-testid="ingredient-search-radio"
+              type="radio"
+              name="radio"
+              value="Ingredient"
+              onChange={ handleChangeRadio }
+            />
+            Ingredient
+          </label>
+          <label htmlFor="name-search-radio" className="flex gap-1">
+            <input
+              data-testid="name-search-radio"
+              type="radio"
+              name="radio"
+              value="Name"
+              onChange={ handleChangeRadio }
+            />
+            Name
+          </label>
+          <label htmlFor="first-letter-search-radio" className="flex gap-1">
+            <input
+              data-testid="first-letter-search-radio"
+              type="radio"
+              name="radio"
+              value="First Letter"
+              onChange={ handleChangeRadio }
+            />
+            First Letter
+          </label>
+        </div>
+        <button
+          data-testid="exec-search-btn"
+          type="button"
+          onClick={ handleClick }
+          className="w-56 h-8 font-bold bg-[#FCC436] rounded-lg"
+        >
+          SEARCH
+        </button>
+      </div>
     </div>
   );
 }

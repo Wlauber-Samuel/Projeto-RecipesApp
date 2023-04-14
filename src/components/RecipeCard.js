@@ -9,17 +9,21 @@ export default function RecipeCard({
   url,
   testID,
   testID2,
+  class1,
+  class2,
+  class3,
+  class4,
 }) {
   return (
-    <Link to={ url }>
-      <section data-testid={ `${index}-recipe-card` } className="recipe-card">
+    <Link to={ url } className={ class1 }>
+      <section data-testid={ `${index}-recipe-card` } className={ class2 }>
         <img
           data-testid={ testID }
           src={ thumb }
           alt={ name }
-          className="image-card"
+          className={ class3 }
         />
-        <h2 data-testid={ testID2 }>{name}</h2>
+        <h2 data-testid={ testID2 } className={ class4 }>{name}</h2>
       </section>
     </Link>
   );

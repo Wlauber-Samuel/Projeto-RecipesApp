@@ -2,9 +2,9 @@ import clipboardCopy from 'clipboard-copy';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import blackHeartIcon from '../images/blackHeartIcon.svg';
-import shareIcon from '../images/shareIcon.svg';
-import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/like.png';
+import shareIcon from '../images/Share.png';
+import whiteHeartIcon from '../images/likeborder.png';
 import './Favorite.css';
 
 function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
@@ -150,33 +150,35 @@ function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
   };
 
   return (
-    <div>
-      <button
-        onClick={ handleClickFavorite }
-      >
-        <img
-          src={ !favorite ? whiteHeartIcon : blackHeartIcon }
-          alt="compartilhar"
-          data-testid={ testId1 }
-        />
-      </button>
-      <button
-        type="button"
-        onClick={ handleShare }
-        data-testid={ !pathnames.includes(pathname) ? testId2 : '' }
-      >
-        <img
-          src={ shareIcon }
-          alt="share"
-          data-testid={ pathnames.includes(pathname) ? testId2 : '' }
-        />
-        {share ? <span>Link copied!</span> : ''}
-      </button>
+    <div className="">
+      <div className="flex p-1 gap-2">
+        <button
+          onClick={ handleClickFavorite }
+        >
+          <img
+            src={ !favorite ? whiteHeartIcon : blackHeartIcon }
+            alt="compartilhar"
+            data-testid={ testId1 }
+          />
+        </button>
+        <button
+          type="button"
+          onClick={ handleShare }
+          data-testid={ !pathnames.includes(pathname) ? testId2 : '' }
+        >
+          <img
+            src={ shareIcon }
+            alt="share"
+            data-testid={ pathnames.includes(pathname) ? testId2 : '' }
+          />
+        </button>
+      </div>
+      {share ? <p>Link copied!</p> : ''}
       {!done && (
         <button
           type="button"
           data-testid="start-recipe-btn"
-          className="start-recipe"
+          className="fixed bottom-1 left-4 w-[90%] bg-[#FCA311] text-white rounded-lg p-2 font-bold z-50"
           onClick={ () => (pathname === `/meals/${id}`
             ? history.push(`/meals/${id}/in-progress`)
             : history.push(`/drinks/${id}/in-progress`)) }
