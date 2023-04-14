@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import blackHeartIcon from '../images/like.png';
 import shareIcon from '../images/Share.png';
 import whiteHeartIcon from '../images/likeborder.png';
-import './Favorite.css';
 
 function Favorite({ testId1, testId2, recipeId, recipeType, recipeState }) {
   const history = useHistory();
